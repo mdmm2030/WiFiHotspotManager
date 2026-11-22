@@ -1,0 +1,84 @@
+<Window x:Class="WiFiHotspotManager.MainWindow"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ Title="WiFi Hotspot Manager" Height="760" Width="1120" MinHeight="650" MinWidth="950"
+ WindowStartupLocation="CenterScreen" Background="#F1F5F9" FontFamily="Segoe UI">
+ <Grid Margin="22">
+  <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+  <DockPanel Grid.Row="0" Margin="0,0,0,18">
+   <StackPanel>
+    <TextBlock Text="WiFi Hotspot Manager" FontSize="27" FontWeight="Bold" Foreground="#0F172A"/>
+    <TextBlock Text="إدارة نقطة الاتصال والأجهزة المتصلة • Hotspot &amp; client control" Foreground="#64748B" FontSize="13"/>
+   </StackPanel>
+   <Button DockPanel.Dock="Right" Content="فتح إعدادات Windows" Background="#E2E8F0" Click="OpenSettings_Click"/>
+  </DockPanel>
+  <Grid Grid.Row="1" Margin="0,0,0,16">
+   <Grid.ColumnDefinitions><ColumnDefinition Width="1.25*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+   <Border Grid.Column="0" Background="White" CornerRadius="14" Padding="18" Margin="0,0,10,0">
+    <StackPanel>
+     <TextBlock Text="حالة نقطة الاتصال • Hotspot status" Foreground="#64748B"/>
+     <TextBlock x:Name="StatusText" Text="غير متصل • Off" FontSize="23" FontWeight="SemiBold" Margin="0,8"/>
+     <TextBlock x:Name="StatusDetail" Text="جاهز لفحص إعدادات Windows" Foreground="#64748B" TextWrapping="Wrap"/>
+     <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+      <Button x:Name="StartButton" Content="تشغيل • Start" Background="#2563EB" Foreground="White" Click="Start_Click"/>
+      <Button x:Name="StopButton" Content="إيقاف • Stop" Background="#E2E8F0" Click="Stop_Click"/>
+     </StackPanel>
+    </StackPanel>
+   </Border>
+   <Border Grid.Column="1" Background="White" CornerRadius="14" Padding="18" Margin="0,0,10,0">
+    <StackPanel>
+     <TextBlock Text="الأجهزة المتصلة • Connected" Foreground="#64748B"/>
+     <TextBlock x:Name="ClientCount" Text="0" FontSize="34" FontWeight="Bold" Margin="0,8"/>
+     <TextBlock Text="عدد العملاء المكتشفين من Windows" Foreground="#64748B" TextWrapping="Wrap"/>
+     <Button Content="تحديث القائمة • Refresh" Background="#DBEAFE" Click="Refresh_Click" HorizontalAlignment="Left" Margin="0,12,0,0"/>
+    </StackPanel>
+   </Border>
+   <Border Grid.Column="2" Background="White" CornerRadius="14" Padding="18">
+    <StackPanel>
+     <TextBlock Text="الأجهزة المحظورة • Blocked" Foreground="#64748B"/>
+     <TextBlock x:Name="BlockedCount" Text="0" FontSize="34" FontWeight="Bold" Margin="0,8"/>
+     <TextBlock Text="قواعد حظر IP محفوظة في Windows Firewall" Foreground="#64748B" TextWrapping="Wrap"/>
+     <Button Content="عرض المحظورين • View" Background="#FEE2E2" Click="ShowBlocked_Click" HorizontalAlignment="Left" Margin="0,12,0,0"/>
+    </StackPanel>
+   </Border>
+  </Grid>
+  <Grid Grid.Row="2">
+   <Grid.ColumnDefinitions><ColumnDefinition Width="1.15*"/><ColumnDefinition Width="1.85*"/></Grid.ColumnDefinitions>
+   <Border Grid.Column="0" Background="White" CornerRadius="14" Padding="18" Margin="0,0,10,0">
+    <StackPanel>
+     <TextBlock Text="إعدادات الشبكة • Hotspot settings" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10"/>
+     <TextBlock Text="اسم الشبكة • Network name"/>
+     <TextBox x:Name="SsidBox" Text="My-WiFi-Hotspot"/>
+     <TextBlock Text="كلمة المرور • Password" Margin="0,8,0,0"/>
+     <PasswordBox x:Name="PasswordBox" Padding="10,8" Margin="4"/>
+     <TextBlock Text="مصدر الإنترنت • Internet source" Margin="0,8,0,0"/>
+     <TextBlock Text="تُدار نقطة الاتصال عبر خدمة Windows Mobile Hotspot." Foreground="#64748B" TextWrapping="Wrap" Margin="4,4,4,12"/>
+     <Button Content="حفظ الإعدادات • Apply" Background="#DBEAFE" Click="Apply_Click" HorizontalAlignment="Left"/>
+     <Button Content="فتح صفحة Mobile Hotspot" Background="#F1F5F9" Click="OpenSettings_Click" HorizontalAlignment="Left"/>
+    </StackPanel>
+   </Border>
+   <Border Grid.Column="1" Background="White" CornerRadius="14" Padding="18">
+    <DockPanel>
+     <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
+      <TextBlock Text="الأجهزة المتصلة • Connected devices" FontSize="18" FontWeight="SemiBold"/>
+      <TextBlock Text="حظر الجهاز يعتمد على عنوان IP وقواعد Windows Firewall؛ قد لا يمنع تمرير حركة Hotspot على كل تعريفات الشبكة." Foreground="#B45309" TextWrapping="Wrap" Margin="0,5,0,0"/>
+     </StackPanel>
+     <DataGrid x:Name="ClientsGrid" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True"
+       HeadersVisibility="Column" GridLinesVisibility="Horizontal" RowHeight="38">
+      <DataGrid.Columns>
+       <DataGridTextColumn Header="اسم الجهاز • Device" Binding="{Binding Name}" Width="*"/>
+       <DataGridTextColumn Header="عنوان IP" Binding="{Binding Ip}" Width="125"/>
+       <DataGridTextColumn Header="MAC" Binding="{Binding Mac}" Width="155"/>
+       <DataGridTextColumn Header="الحالة • Status" Binding="{Binding Status}" Width="105"/>
+      </DataGrid.Columns>
+     </DataGrid>
+     <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+      <Button Content="حظر المحدد • Block selected" Background="#FEE2E2" Click="BlockSelected_Click"/>
+      <Button Content="إلغاء الحظر • Unblock" Background="#DCFCE7" Click="UnblockSelected_Click"/>
+     </StackPanel>
+    </DockPanel>
+   </Border>
+  </Grid>
+  <TextBlock Grid.Row="3" x:Name="FooterText" Text="Ready • جاهز" Foreground="#64748B" Margin="4,12,0,0"/>
+ </Grid>
+</Window>
